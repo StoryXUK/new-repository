@@ -1,7 +1,7 @@
 // Replace with your deployed Google Apps Script Web App /exec URL.
 const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxsOMVMrpzH_qzuOrWfqYS5HHGENvHzWbg30fsEAJGtkW802kjqml15N8sQGRaRkAyE/exec';
-const OPERATORS = ['Alderford','Anglian Water','Aqua Park Training','Aztec Adventure','Beccles Lido','beendurance','Cotswold Country Park and Beach','Cotswold Lake Trust','Gateshead Leisure Centre','Lincoln Water Parks','Meadowbay','Parkwood Leisure','Petersfield Lido','ptp coaching','Royal Parks','South downs leisure','St Andrews Lakes','Stubbers Adventure Centre','UK Water Parks','Ware Priory Lido','West Country Waterpark','Peak Open Water Sports','Dŵr Cymru Welsh Water'];
-const SUPPLIERS = ['4 Leisure Recruitment Ltd','Active Insight','Airspace Solutions.com Ltd','Aqua parks UK','Blowmesup','Fibodo','Nowca','RLSS','Wibit','xn leisure','Decathlon','Swim Nation','Swim England','Industry Wake'];
+const OPERATORS = ['Alderford', 'Anglian Water', 'Aqua Park Training', 'Aztec Adventure', 'Beccles Lido', 'beendurance', 'Cotswold Country Park and Beach', 'Cotswold Lake Trust', 'Gateshead Leisure Centre', 'Lincoln Water Parks', 'Meadowbay', 'Parkwood Leisure', 'Petersfield Lido', 'ptp coaching', 'Royal Parks', 'South downs leisure', 'St Andrews Lakes', 'Stubbers Adventure Centre', 'UK Water Parks', 'Ware Priory Lido', 'West Country Waterpark', 'Peak Open Water Sports', 'Dŵr Cymru Welsh Water'];
+const SUPPLIERS = ['4 Leisure Recruitment Ltd', 'Active Insight', 'Airspace Solutions.com Ltd', 'Aqua parks UK', 'Blowmesup', 'fibodo', 'Nowca', 'RLSS', 'Wibit', 'xn leisure', 'Decathlon', 'Swim Nation', 'Swim England', 'Industry Wake'];
 const WEBSITES = {
   "Alderford": "https://alderford.com/",
   "Anglian Water": "https://www.anglianwater.co.uk/",
@@ -51,34 +51,34 @@ if (role) {
   const status = document.getElementById('status');
   const submit = document.getElementById('submit');
   const selected = new Set();
-  own.forEach(name => {const option=document.createElement('option');option.value=name;option.textContent=name;business.append(option)});
-  const ownWebsite=document.getElementById('ownWebsite');
-  function updateOwnWebsite(){const url=WEBSITES[business.value];ownWebsite.hidden=!url;if(url){ownWebsite.href=url;ownWebsite.textContent=`Visit ${business.value} website ↗`;}}
-  business.addEventListener('change',updateOwnWebsite);updateOwnWebsite();
-  function render(){
-    const q=search.value.trim().toLocaleLowerCase();options.replaceChildren();
-    choices.filter(name=>name.toLocaleLowerCase().includes(q)).forEach(name=>{
-      const label=document.createElement('label');label.className='option';
-      const input=document.createElement('input');input.type='checkbox';input.checked=selected.has(name);input.value=name;
-      input.addEventListener('change',()=>{input.checked?selected.add(name):selected.delete(name);count.textContent=`${selected.size} selected`;});
-      const span=document.createElement('span');span.textContent=name;label.append(input,span);
-      if(WEBSITES[name]){const a=document.createElement('a');a.href=WEBSITES[name];a.target='_blank';a.rel='noopener noreferrer';a.className='website';a.textContent='Website ↗';a.setAttribute('aria-label',`Visit ${name} website (opens in a new tab)`);a.addEventListener('click',e=>e.stopPropagation());label.append(a)}
+  own.forEach(name => { const option = document.createElement('option'); option.value = name; option.textContent = name; business.append(option) });
+  const ownWebsite = document.getElementById('ownWebsite');
+  function updateOwnWebsite() { const url = WEBSITES[business.value]; ownWebsite.hidden = !url; if (url) { ownWebsite.href = url; ownWebsite.textContent = `Visit ${business.value} website ↗`; } }
+  business.addEventListener('change', updateOwnWebsite); updateOwnWebsite();
+  function render() {
+    const q = search.value.trim().toLocaleLowerCase(); options.replaceChildren();
+    choices.filter(name => name.toLocaleLowerCase().includes(q)).forEach(name => {
+      const label = document.createElement('label'); label.className = 'option';
+      const input = document.createElement('input'); input.type = 'checkbox'; input.checked = selected.has(name); input.value = name;
+      input.addEventListener('change', () => { input.checked ? selected.add(name) : selected.delete(name); count.textContent = `${selected.size} selected`; });
+      const span = document.createElement('span'); span.textContent = name; label.append(input, span);
+      if (WEBSITES[name]) { const a = document.createElement('a'); a.href = WEBSITES[name]; a.target = '_blank'; a.rel = 'noopener noreferrer'; a.className = 'website'; a.textContent = 'Website ↗'; a.setAttribute('aria-label', `Visit ${name} website (opens in a new tab)`); a.addEventListener('click', e => e.stopPropagation()); label.append(a) }
       options.append(label);
     });
-    if(!options.childElementCount){const empty=document.createElement('p');empty.textContent='No matching businesses';options.append(empty)}
+    if (!options.childElementCount) { const empty = document.createElement('p'); empty.textContent = 'No matching businesses'; options.append(empty) }
   }
-  search.addEventListener('input',render);render();
-  document.getElementById('meetingForm').addEventListener('submit',async event=>{
-    event.preventDefault();status.className='status';
-    if(!business.value || !primaryAttendee.value.trim() || !selected.size){status.textContent='Enter your primary attendee, select your business and at least one meeting preference.';status.classList.add('error');return}
-    if(!GOOGLE_SCRIPT_URL.startsWith('https://script.google.com/macros/s/')){status.textContent='The Google Sheets connection has not been configured yet.';status.classList.add('error');return}
-    submit.disabled=true;submit.textContent='Submitting…';status.textContent='Saving your preferences…';
-    try{
+  search.addEventListener('input', render); render();
+  document.getElementById('meetingForm').addEventListener('submit', async event => {
+    event.preventDefault(); status.className = 'status';
+    if (!business.value || !primaryAttendee.value.trim() || !selected.size) { status.textContent = 'Enter your primary attendee, select your business and at least one meeting preference.'; status.classList.add('error'); return }
+    if (!GOOGLE_SCRIPT_URL.startsWith('https://script.google.com/macros/s/')) { status.textContent = 'The Google Sheets connection has not been configured yet.'; status.classList.add('error'); return }
+    submit.disabled = true; submit.textContent = 'Submitting…'; status.textContent = 'Saving your preferences…';
+    try {
       // Apps Script web apps redirect cross-origin; no-cors is a write-only request.
       // This confirms sending, not successful saving; check the Sheet for receipt.
-      await fetch(GOOGLE_SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({submittedAt:new Date().toISOString(),attendeeType:role,primaryAttendee:primaryAttendee.value.trim(),secondAttendee:secondAttendee.value.trim(),company:business.value,selections:[...selected]})});
-      status.textContent='Your preferences have been sent. Please contact the organiser if you need to confirm receipt.';status.classList.add('success');
-      submit.textContent='Preferences sent';
-    }catch(error){status.textContent='Unable to send your preferences. Please try again.';status.classList.add('error');submit.disabled=false;submit.textContent='Submit meeting preferences →'}
+      await fetch(GOOGLE_SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ submittedAt: new Date().toISOString(), attendeeType: role, primaryAttendee: primaryAttendee.value.trim(), secondAttendee: secondAttendee.value.trim(), company: business.value, selections: [...selected] }) });
+      status.textContent = 'Your preferences have been sent. Please contact the organiser if you need to confirm receipt.'; status.classList.add('success');
+      submit.textContent = 'Preferences sent';
+    } catch (error) { status.textContent = 'Unable to send your preferences. Please try again.'; status.classList.add('error'); submit.disabled = false; submit.textContent = 'Submit meeting preferences →' }
   });
 }
