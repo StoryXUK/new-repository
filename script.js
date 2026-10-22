@@ -43,6 +43,8 @@ if (role) {
   const own = role === 'Operator' ? OPERATORS : SUPPLIERS;
   const choices = role === 'Operator' ? SUPPLIERS : OPERATORS;
   const business = document.getElementById('business');
+  const primaryAttendee = document.getElementById('primaryAttendee');
+  const secondAttendee = document.getElementById('secondAttendee');
   const options = document.getElementById('options');
   const count = document.getElementById('count');
   const search = document.getElementById('search');
@@ -68,13 +70,13 @@ if (role) {
   search.addEventListener('input',render);render();
   document.getElementById('meetingForm').addEventListener('submit',async event=>{
     event.preventDefault();status.className='status';
-    if(!business.value || !selected.size){status.textContent='Select your business and at least one meeting preference.';status.classList.add('error');return}
+    if(!business.value || !primaryAttendee.value.trim() || !selected.size){status.textContent='Enter your primary attendee, select your business and at least one meeting preference.';status.classList.add('error');return}
     if(!GOOGLE_SCRIPT_URL.startsWith('https://script.google.com/macros/s/')){status.textContent='The Google Sheets connection has not been configured yet.';status.classList.add('error');return}
     submit.disabled=true;submit.textContent='Submitting…';status.textContent='Saving your preferences…';
     try{
       // Apps Script web apps redirect cross-origin; no-cors is a write-only request.
       // This confirms sending, not successful saving; check the Sheet for receipt.
-      await fetch(GOOGLE_SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({submittedAt:new Date().toISOString(),attendeeType:role,name:'',company:business.value,selections:[...selected]})});
+      await fetch(GOOGLE_SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({submittedAt:new Date().toISOString(),attendeeType:role,primaryAttendee:primaryAttendee.value.trim(),secondAttendee:secondAttendee.value.trim(),company:business.value,selections:[...selected]})});
       status.textContent='Your preferences have been sent. Please contact the organiser if you need to confirm receipt.';status.classList.add('success');
       submit.textContent='Preferences sent';
     }catch(error){status.textContent='Unable to send your preferences. Please try again.';status.classList.add('error');submit.disabled=false;submit.textContent='Submit meeting preferences →'}
