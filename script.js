@@ -10,6 +10,7 @@ const WEBSITES = {
   "Beccles Lido": "https://beccleslido.com/",
   "beendurance": "https://beenduranceopenwater.com/",
   "Cotswold Country Park and Beach": "https://cotswoldlakes.com/cotswold-country-park-and-beach/",
+  "fibodo": "https://fibodo.com/",
   "Gateshead Leisure Centre": "https://gatesheadleisurecentre.co.uk/",
   "Lincoln Water Parks": "https://www.lincolnwaterpark.co.uk/",
   "Meadowbay": "https://meadowbay.com/",
